@@ -1,5 +1,7 @@
 import express from 'express';
 
+import { PORT } from './config/env.js';
+
 const app = express();
 
 app.get('/', (req, res) => {
@@ -7,8 +9,8 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log('Lifted API is running on http://localhost:3000');
+app.listen(PORT, () => {
+    console.log(`Lifted API is running on http://localhost:${PORT}`);
 });
 
 export default app;
