@@ -5,6 +5,8 @@ import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
 import quoteRouter from './routes/quotes.routes.js';
 
+import connectToDatabase from './database/mongodb.js';
+
 const app = express();
 
 app.use('/api/v1/auth', authRouter);
@@ -16,8 +18,9 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Lifted API is running on http://localhost:${PORT}`);
+    await connectToDatabase();
 });
 
 export default app;
