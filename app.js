@@ -8,12 +8,14 @@ import quoteRouter from './routes/quotes.routes.js';
 
 import connectToDatabase from './database/mongodb.js';
 import errorMiddleware from './middlewares/error.middleware.js';
+import arcjetMiddleware from './middlewares/arcjet.middleware.js';
 
 const app = express();
 
 app.use(express.json()); // allows app to handle json data sent in API calls
 app.use(express.urlencoded({ extended: false })); // helps process html form data in a simple format
 app.use(cookieParser()); // to parse cookies from requests
+app.use(arcjetMiddleware); // Arcjet security middleware
 
 // Routes
 app.use('/api/v1/auth', authRouter);
