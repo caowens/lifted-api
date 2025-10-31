@@ -1,31 +1,18 @@
 import mongoose from "mongoose";
 
 const quoteSchema = new mongoose.Schema({
-    text: {
+    text: { 
         type: String,
-        required: [true, 'Quote text is required'],
-        trim: true,
-        minLength: 1,
-        maxLength: 1000,
+        required: true,
+        unique: true
     },
-    author : {
-        type: String,
-        required: [true, 'Author is required'],
-        trim: true,
-        minLength: 2,
-        maxLength: 100,
-    },
-    isPublic: {
-        type: Boolean,
-        default: true,
-    },
-    user: {
+    author: { type: String },
+    tags: [String],
+    userId: { 
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: false,
-        index: true,
-    }
-}, { timestamps: true });
+        default: null
+    }, // null = public
+});
 
 const Quote = mongoose.model("Quote", quoteSchema);
 
