@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getRandomQuote } from "../controllers/quotes.controller.js";
+import { getRandomQuote, getQuoteById } from "../controllers/quotes.controller.js";
 
 const quoteRouter = Router();
 
 quoteRouter.get('/random', getRandomQuote);
 
-quoteRouter.get('/:id', (req, res) => res.send({title: `GET quote with ID`}));
+quoteRouter.get('/:id', getQuoteById);
 
 export default quoteRouter;
