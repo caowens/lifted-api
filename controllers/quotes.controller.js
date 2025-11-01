@@ -38,3 +38,18 @@ export const getQuoteById = async (req, res, next) => {
         next(err);
     }
 };
+
+export const createPrivateQuote = async (req, res, next) => {
+    try {
+        const quote = await Quote.create({
+            text: req.body.text,
+            author: req.body.author,
+            tags: req.body.tags,
+            userId: req.user._id  // make it private
+        });
+
+        res.status(201).json({ success: true, data: quote });
+    } catch (error) {
+        next(error);
+    }
+};

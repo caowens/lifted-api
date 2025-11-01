@@ -10,6 +10,7 @@ const quoteSchema = new mongoose.Schema({
     tags: [String],
     userId: { 
         type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         default: null
     }, // null = public
 });
