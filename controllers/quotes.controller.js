@@ -33,6 +33,13 @@ export const getQuoteById = async (req, res, next) => {
             throw error;
         }
 
+
+        if (quote.userId && quote.userId.toString() !== req.user?.id.toString()) {
+            const error = new Error('Unauthorized access');
+            error.statusCode = 403;
+            throw error;
+        }
+
         res.status(200).json({ success: true, data: quote });
     } catch (err) {
         next(err);
