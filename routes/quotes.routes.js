@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { getRandomQuote, getQuoteById, createPrivateQuote, editPrivateQuote, deletePrivateQuote } from "../controllers/quotes.controller.js";
+import { getRandomQuote, getQuoteById, createPrivateQuote, editPrivateQuote, deletePrivateQuote, getAllQuotes } from "../controllers/quotes.controller.js";
 import { authorize, authOptional } from "../middlewares/auth.middleware.js";
 
 const quoteRouter = Router();
+
+quoteRouter.get('/', authOptional, getAllQuotes);
 
 quoteRouter.get('/random', authOptional, getRandomQuote);
 

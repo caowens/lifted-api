@@ -23,7 +23,7 @@ export const getRandomQuote = async (req, res, next) => {
             { $match: filter },
             { $sample: { size: 1 } }
         ]);
-        
+
         res.json({ success: true, data: quote[0] || {} });
     } catch (err) {
         next(err);
@@ -119,3 +119,47 @@ export const deletePrivateQuote = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getAllQuotes = async (req, res, next) => {
+    try {
+        // Pagination (default: page 1, 20 quotes)
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        // Scope: public | private | all
+        const scope = req.query.scope || "public";
+        let filter = { userId: null }; // default: public quotes only
+
+        if (scope === "private") {
+            if (!req.user) return res.status(401).json({ error: "Login required for private quotes" });
+            filter = { userId: req.user._id };
+        }
+
+        if (scope === "all") {
+            if (!req.user) return res.status(401).json({ error: "Login required for 'all' quotes" });
+            filter = { $or: [{ userId: null }, { userId: req.user._id }] };
+        }
+
+        // Query the database with pagination
+        const quotes = await Quote.find(filter)
+            .skip(skip)
+            .limit(limit)
+            .lean(); // lean() makes query faster (returns plain JS objects)
+        
+        // Total count for pagination UI
+        const total = await Quote.countDocuments(filter);
+
+
+        res.status(200).json({ success: true, data: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+            quotes,
+        } });
+        
+    } catch(error) {
+        next(error);
+    }
+};
