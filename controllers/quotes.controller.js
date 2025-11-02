@@ -89,3 +89,26 @@ export const editPrivateQuote = async (req, res, next) => {
         next(error);
     }
 };
+
+export const deletePrivateQuote = async (req, res, next) => {
+    try {
+        const quote = await Quote.findById(req.params.id);
+
+        if (!quote) {
+            const error = new Error('Quote not found');
+            error.statusCode = 404;
+            throw error;
+        }
+        if (quote.userId && quote.userId.toString() !== req.user?.id.toString()) {
+            const error = new Error('Unauthorized access');
+            error.statusCode = 403;
+            throw error;
+        }
+
+        await Quote.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({ success: true, message: 'Quote deleted successfully' });
+    } catch (error) {
+        next(error);
+    }
+}
