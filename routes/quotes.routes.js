@@ -4,7 +4,7 @@ import { authorize, authOptional } from "../middlewares/auth.middleware.js";
 
 const quoteRouter = Router();
 
-quoteRouter.get('/random', getRandomQuote);
+quoteRouter.get('/random', authOptional, getRandomQuote);
 
 quoteRouter.get('/:id', authOptional, getQuoteById);
 

@@ -1,23 +1,30 @@
 import Quote from "../models/quote.model.js";
 
+// GET /api/quotes/random?scope=public|private|all
 export const getRandomQuote = async (req, res, next) => {
     try {
-        const arr = await Quote.aggregate([
-            { $match: { userId: null } },
-            { $sample: { size: 1 } }
-        ]);
+        const scope = req.query.scope || "public";
+        let filter = {};
 
-        if (!arr.length) {
-            return res.status(404).json({ message: "No public quotes available" });
+        if (scope === "public") {
+            filter = { userId: null };
+        } else if (scope === "private" && req.user) {
+            filter = { userId: req.user._id };
+        } else if (scope === "all" && req.user) {
+            filter = { $or: [{ userId: null }, { userId: req.user._id }] };
+        } else if (scope === "private" || scope === "all") {
+            return res.status(401).json({ error: "Login required for private/all" });
+        }
+        else {
+            return res.status(400).json({ error: "Invalid scope parameter" });
         }
 
-        const quote = arr[0];
-        res.json({
-            id: quote._id,
-            text: quote.text,
-            author: quote.author,
-            tags: quote.tags
-        });
+        const quote = await Quote.aggregate([
+            { $match: filter },
+            { $sample: { size: 1 } }
+        ]);
+        
+        res.json({ success: true, data: quote[0] || {} });
     } catch (err) {
         next(err);
     }
