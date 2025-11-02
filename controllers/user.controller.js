@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 
 
@@ -20,6 +21,31 @@ export const getUser = async (req, res, next) => {
             throw error;
         }
         
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const updateUser = async (req, res, next) => {
+    try {
+        let user;
+        if (req.user && req.body.password) {
+            let password;
+            const salt = await bcrypt.genSalt(10);
+            password = await bcrypt.hash(req.body.password, salt);
+            user = await User.findByIdAndUpdate(req.params.id, { ...req.body, password }, { new: true }).select('-password');
+        } else {
+            user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }).select('-password');
+        }
+
+
+        if (!user) {
+            const error = new Error('User not found');
+            error.statusCode = 404;
+            throw error;
+        }
+
         res.status(200).json({ success: true, data: user });
     } catch (error) {
         next(error);
