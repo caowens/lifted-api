@@ -11,7 +11,12 @@ const swaggerDefinition = {
     servers: [
       {
         url: `http://localhost:${PORT}/`,
+        description: "Local Dev Server",
       },
+      {
+        url: `https://lifted-api.onrender.com/`,
+        description: "Production Server",
+      }
     ],
     components: {
         schemas: {
