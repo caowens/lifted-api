@@ -46,6 +46,7 @@ const swaggerDefinition = {
             type: 'http',
             scheme: 'bearer',
             bearerFormat: 'JWT',
+            description: "Enter your token in the format: Bearer <JWT>"
           },
         },
       },
@@ -56,7 +57,7 @@ const swaggerDefinition = {
 
 const options = {
   definition: swaggerDefinition,
-  apis: ["./routes/*.js", "./models/*.js"],
+  apis: ["./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
