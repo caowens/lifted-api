@@ -10,6 +10,9 @@ import connectToDatabase from './database/mongodb.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import arcjetMiddleware from './middlewares/arcjet.middleware.js';
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.js';
+
 const app = express();
 
 app.use(express.json()); // allows app to handle json data sent in API calls
@@ -23,6 +26,8 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/quotes', quoteRouter);
 
 app.use(errorMiddleware); // Error handling middleware
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Swagger API docs
 
 app.get('/', (req, res) => {
   res.send('Welcome to the Lifted API!');
