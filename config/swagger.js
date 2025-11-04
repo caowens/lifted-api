@@ -6,16 +6,16 @@ const swaggerDefinition = {
     info: {
       title: "Lifted API",
       version: "1.0.0",
-      description: "API documentation for the Lifted API",
+      description: "API documentation for the Lifted API. See the project on [GitHub](https://github.com/caowens/lifted-api).",
     },
     servers: [
+    {
+        url: `https://lifted-api.onrender.com/`,
+        description: "Production Server",
+      },
       {
         url: `http://localhost:${PORT}/`,
         description: "Local Dev Server",
-      },
-      {
-        url: `https://lifted-api.onrender.com/`,
-        description: "Production Server",
       }
     ],
     components: {
